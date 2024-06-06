@@ -15,7 +15,9 @@ app.post('/api/query', async (req, res) => {
         // Make an API call to the OpenAI chat completion endpoint
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-3.5-turbo", // Make sure to use the correct model name
-            messages: [{ role: "system", content: "You are a helpful assistant." }, { role: "user", content: req.body.prompt }]
+            messages: [{
+                role: "system", content: "Create a case study for a public health nurse who needs to learn about chickenpox. The nurse will call a patient who has chickenpox and ask questions to learn about how they were exposed, when they were exposed and other important information. You will play the role of the patient and when user asks questions, respond as the patient.  Base responses on this website: https://www.cdc.gov/chickenpox/index.html" },
+            { role: "user", content: req.body.prompt }]
         }, {
             headers: {
                 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
