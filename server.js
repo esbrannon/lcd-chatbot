@@ -13,7 +13,7 @@ app.use(express.json());
 // Route to handle chat completion requests
 app.post('/api/query', async (req, res) => {
     try {
-        const htmlPath = './cases/chickenpox.html'; // Replace with the path to your HTML file
+        const htmlPath = 'https://quiet-beyond-24129-5f235946185f.herokuapp.com/cases/chickenpox.html'; // Replace with the path to your HTML file
         const caseStudyHTML = await fs.readFile(htmlPath, 'utf8'); // Read the HTML file content
 
         // Make an API call to the OpenAI chat completion endpoint
