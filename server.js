@@ -4,9 +4,17 @@ const express = require('express');
 const axios = require('axios');
 const fs = require('fs').promises;
 const app = express();
+const session = require('express-session');
 const PORT = process.env.PORT || 3000;
 
-// Middleware to serve static files and parse JSON bodies
+// Configure session middleware
+app.use(session({
+    secret: 'your-secret', // Replace 'your-secret' with a secret string
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false, maxAge: 3600000 } // For development, 'secure' is false; in production, it should be true if using HTTPS
+}));
+
 app.use(express.static('public'));
 app.use(express.json());
 
@@ -15,16 +23,21 @@ app.post('/api/query', async (req, res) => {
     try {
         const htmlPath = './public/cases/chickenpox.html'; // Replace with the path to your HTML file
         const caseStudy = await fs.readFile(htmlPath, 'utf8'); // Read the HTML file content
-        
-         // const caseStudy = "Case Study: Public Health Nurse and Chickenpox Outbrea Background: Public health nurse Ann Baxter, RN, MPH, who is part of the communicable disease division at the Midtown County Health Department in Michigan, faced an imminent challenge.On March 10th, the health department was notified of several suspected cases of chickenpox at a local elementary school.Ann was tasked with the investigation, containment, and educational response to the reported outbreak Case Presentation Expanded: Anns investigation began with the index case, a 7-year-old girl named Emma – a second grader at the local elementary school. Here is an expanded account: Initial Case - Emma(Case Index): Patient Profile: Emma, a previously healthy 7 - year - old female with no immunizations for chickenpox, due to her parents preference. Initial Symptoms: She started showing symptoms with a low - grade fever of 100.5°F(38°C) and was experiencing a headache and fatigue two days prior to her case being reported. Progression of Symptoms: By the next day, Emmas mother noticed a red, itchy rash on Emma’s back and abdomen. Clinical Examination: A pediatrician assessed Emma and found the rash had developed into fluid - filled blisters with a characteristic pattern of central indentation known as umbilication - a hallmark of varicella lesions.The presence of lesions at different stages was also typical of chickenpox. Diagnosis and Reporting: The pediatrician confirmed the diagnosis of chickenpox based on the symptoms and absence of vaccine protection.The county health department was notified of the case, following state public health laws Subsequent Cases: Shortly after Emmas diagnosis, four additional cases were reported, belonging to children aged 5 to 9, some of whom had not received any varicella vaccine and others had incomplete vaccinations. Symptoms: The symptoms mirrored those of Emma with the onset of fever, malaise, and rash, progressing to the classic vesicular stage.  Confirmation of Infection: The timing of the subsequent cases. Symptom onset fell within 10 to 21 days after exposure to Emma, which fits the incubation period for the varicella-zoster virus, indicating an outbreak."
+
+        // Initialize the session's chat history if it doesn't exist
+        if (!req.session.chatHistory) {
+            req.session.chatHistory = [];
+        }
+
+        const previousMessages = req.session.chatHistory;
 
         // Make an API call to the OpenAI chat completion endpoint
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-4o", // Make sure to use the correct model name
             messages: [{
-                //role: "system", content: "You a patient and the user is a nurse. The nurse will ask you questions about the following case study: Case Study: Public Health Nurse and Chickenpox Outbrea Background: Public health nurse Ann Baxter, RN, MPH, who is part of the communicable disease division at the Midtown County Health Department in Michigan, faced an imminent challenge.On March 10th, the health department was notified of several suspected cases of chickenpox at a local elementary school.Ann was tasked with the investigation, containment, and educational response to the reported outbreak Case Presentation Expanded: Anns investigation began with the index case, a 7-year-old girl named Emma – a second grader at the local elementary school. Here is an expanded account: Initial Case - Emma(Case Index): Patient Profile: Emma, a previously healthy 7 - year - old female with no immunizations for chickenpox, due to her parents preference. Initial Symptoms: She started showing symptoms with a low - grade fever of 100.5°F(38°C) and was experiencing a headache and fatigue two days prior to her case being reported. Progression of Symptoms: By the next day, Emmas mother noticed a red, itchy rash on Emma’s back and abdomen. Clinical Examination: A pediatrician assessed Emma and found the rash had developed into fluid - filled blisters with a characteristic pattern of central indentation known as umbilication - a hallmark of varicella lesions.The presence of lesions at different stages was also typical of chickenpox. Diagnosis and Reporting: The pediatrician confirmed the diagnosis of chickenpox based on the symptoms and absence of vaccine protection.The county health department was notified of the case, following state public health laws Subsequent Cases: Shortly after Emmas diagnosis, four additional cases were reported, belonging to children aged 5 to 9, some of whom had not received any varicella vaccine and others had incomplete vaccinations. Symptoms: The symptoms mirrored those of Emma with the onset of fever, malaise, and rash, progressing to the classic vesicular stage.  Confirmation of Infection: The timing of the subsequent cases. Symptom onset fell within 10 to 21 days after exposure to Emma, which fits the incubation period for the varicella-zoster virus, indicating an outbreak." },
-                role: "system", content: `You a patient and the user is a nurse. The nurse will ask you questions about the following case study: ${caseStudy} `
+                role: "system", content: `You are a patient and the user is a nurse. The user will ask you questions about the following case study: ${caseStudy} When the user types "END" provide an evaluation using the RIME framework`
             },
+                ...previousMessages, // Spread the previous messages here
             { role: "user", content: req.body.prompt }]
         }, {
             headers: {
@@ -36,8 +49,20 @@ app.post('/api/query', async (req, res) => {
         // Log the full response data
         console.log('OpenAI API Response:', JSON.stringify(response.data, null, 2));
 
+        req.session.chatHistory.push({
+            role: "user",
+            content: req.body.prompt
+        });
+
         // Extract the message content and send back to the client
         const messageContent = response.data.choices[0].message.content;
+
+        // Add the AI's response to session history
+        req.session.chatHistory.push({
+            role: "assistant",
+            content: messageContent
+        });
+
         res.json({ message: messageContent });
 
     } catch (error) {
