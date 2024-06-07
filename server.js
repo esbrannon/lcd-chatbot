@@ -16,7 +16,15 @@ app.use(session({
 }));
 
 app.use(express.static('public'));
+
+app.get('/js/marked.min.js', function (req, res) {
+    res.type('application/javascript');
+    res.sendFile(path.join(__dirname, 'public', 'js', 'marked.min.js'));
+});
+
+
 app.use(express.json());
+
 
 // Route to handle chat completion requests
 app.post('/api/query', async (req, res) => {

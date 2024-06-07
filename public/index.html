@@ -79,15 +79,23 @@
     <!-- Bootstrap and jQuery Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="/js/marked.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <!-- Custom Script  <script src="js/script.js"></script> -->
     <script>
+
         $(document).ready(function () {
             // Function to add a message to the chat display
             function addChatMessage(content, isUser = false) {
                 const divClass = isUser ? 'chat-message user-message' : 'chat-message bot-message';
-                const messageDiv = $('<div>').addClass(divClass).text(content);
+
+                // Use marked to convert Markdown content to HTML
+                const messageHtml = content;
+
+                // Create a div and set its HTML to the converted content
+                const messageDiv = $('<div>').addClass(divClass).html(messageHtml);
+
                 $('#answerDiv').prepend(messageDiv); // Prepend to keep the latest message at the bottom
             }
 
@@ -142,6 +150,8 @@
                 });
             });
         });
+
+
     </script>
 </body>
 </html>

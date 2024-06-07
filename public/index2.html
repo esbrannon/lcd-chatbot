@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="/js/marked.min.js"></script>
+</head>
+<body>
+    <div id="content"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const markdownContent = '**Hello, Markdown!**';
+            const htmlContent = marked(markdownContent);
+            document.getElementById('content').innerHTML = htmlContent;
+        });
+    </script>
+</body>
+</html>
