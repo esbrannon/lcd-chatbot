@@ -91,7 +91,7 @@
                 const divClass = isUser ? 'chat-message user-message' : 'chat-message bot-message';
 
                 // Use marked to convert Markdown content to HTML
-                const messageHtml = content;
+                const messageHtml = marked.parse(content);
 
                 // Create a div and set its HTML to the converted content
                 const messageDiv = $('<div>').addClass(divClass).html(messageHtml);
