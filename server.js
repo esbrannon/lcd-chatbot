@@ -30,7 +30,7 @@ app.use(express.json());
 // Route to handle chat completion requests
 app.post('/api/query', async (req, res) => {
     try {
-        const htmlPath = './public/cases/chickenpox-case.html'; // Replace with the path to your HTML file
+        const htmlPath = './public/cases/chickenpox.html'; // Replace with the path to your HTML file
         const caseStudy = await fs.readFile(htmlPath, 'utf8'); // Read the HTML file content
 
         // Initialize the session's chat history if it doesn't exist
