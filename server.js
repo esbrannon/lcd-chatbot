@@ -44,7 +44,7 @@ app.post('/api/query', async (req, res) => {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-4o", // Make sure to use the correct model name
             messages: [{
-                role: "system", content: `You are a patient and the user is a nurse. The user will ask you questions about the following case study: ${caseStudy} When the user types "END" provide an evaluation using the RIME framework`
+                role: "system", content: `You are a patient and the user is a nurse. The user will ask you questions about the following case study: ${caseStudy} When the user types "END" provide an evaluation of the nurse using the RIME framework`
             },
                 ...previousMessages, // Spread the previous messages here
             { role: "user", content: req.body.prompt }]
