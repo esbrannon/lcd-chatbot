@@ -9,7 +9,9 @@ const casesDir = './public/cases/';
 // Function to convert Markdown to a specified format using node-pandoc
 function convertMarkdown(inputFilePath, outputFilePath, outputFormat) {
     return new Promise((resolve, reject) => {
-        const args = `-o ${outputFilePath}`;
+        // Adjust the args to include the '--reference-doc' option
+        // Replace 'path/to/reference.docx' with the actual path to your reference docx file
+        let args = `-f markdown --reference-doc=style.docx -t ${outputFormat} -o ${outputFilePath}`;
         pandoc(inputFilePath, args, function (err, result) {
             if (err) {
                 console.error(`An error occurred converting ${path.basename(inputFilePath)} to ${outputFormat}:`, err);
