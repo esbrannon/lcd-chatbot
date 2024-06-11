@@ -1,29 +1,4 @@
-body {
-    background: #f4f4f9;
-    font-family: Arial, sans-serif;
-}
-
-.container {
-    max-width: 800px;
-    margin: auto; 
-}
-
-
-.response-container {
-    display: flex;
-    flex-direction: column; 
-    gap: 10px; 
-    margin-top: 20px; 
-}
-
-#copyButton {
-    align-self: flex-end; 
-    padding: 0.375rem 0.75rem; 
-    font-size: 1rem; 
-}
-   
-
-#answerDiv {
+﻿#answerDiv {
     background-color: #f8f9fa;
     height: 300px;
     overflow-y: auto;

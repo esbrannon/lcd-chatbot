@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Load and Convert Markdown</title>
+</head>
+<body>
+    <div id="markdown-content">
+        <!-- Markdown content will be inserted here after conversion -->
+    </div>
+
+    <!-- Action buttons for downloading as PDF or DOCX -->
+    <button id="download-pdf">Download as PDF</button>
+    <button id="download-docx">Download as DOCX</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Including jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+    <script>
+        // Fetch the Markdown file as done earlier
+        fetch('./chickenpox.md')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(markdown => {
+                // Convert the Markdown to HTML
+                const htmlContent = marked.parse(markdown);
+                const markdownContainer = document.getElementById('markdown-content');
+
+                // Insert the HTML content into the designated element
+                markdownContainer.innerHTML = htmlContent;
+
+                const downloadPdfButton = document.getElementById('download-pdf');
+                const downloadDocxButton = document.getElementById('download-docx');
+
+                // Handle the PDF download
+                downloadPdfButton.addEventListener('click', () => {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    doc.text(markdownContainer.innerText, 10, 10);
+                    doc.save('document.pdf');
+                });
+
+                // Handle the DOCX download
+                // Note: html-docx-js does not have a full client-side solution for DOCX conversion.
+                // This is just for illustration; you would typically use server-side processing with a library like Pandoc.
+                downloadDocxButton.addEventListener('click', () => {
+                    // Code here will depend on the chosen library/tool for DOCX conversion.
+                    // There's no universally accepted client-side library for this at the time of writing.
+                    // You would need to do this server-side or use a third-party service/API.
+                    console.log('DOCX conversion needs to be handled server-side.');
+                });
+            })
+            .catch(e => {
+                console.error('Error fetching the Markdown file', e);
+            });
+    </script>
+
+</body>
+</html>
+
+
