@@ -39,16 +39,16 @@ app.post('/api/query', async (req, res) => {
         let htmlPath;
         switch (selectedDisease) {
             case 'chickenpox':
-                htmlPath = './public/cases/chickenpox.html';
+                htmlPath = './public/cases/chickenpox.md';
                 break;
             case 'giardia':
-                htmlPath = './public/cases/giardia.html';
+                htmlPath = './public/cases/giardia.md';
                 break;
             case 'measles':
-                htmlPath = './public/cases/measles.html';
+                htmlPath = './public/cases/measles.md';
                 break;
             default:
-                htmlPath = './public/cases/default.html'; // Default path or an error message
+                htmlPath = './public/cases/default.md'; // Default path or an error message
                 break;
         }
 
