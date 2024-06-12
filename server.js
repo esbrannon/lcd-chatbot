@@ -67,7 +67,7 @@ app.post('/api/query', async (req, res) => {
             messages: [{
                 role: "system", content: `You are a patient in the following case study: ${caseStudy} . The user is a public health nurse investigating your case. Your education level, based on your age, should be reflected in your responses. When the user types "END" provide an evaluation of the nurse using the RIME framework based only on the chat history`
             },
-                ...previousMessages, // Spread the previous messages here
+            ...previousMessages, // Spread the previous messages here
             { role: "user", content: req.body.prompt }]
         }, {
             headers: {
@@ -75,6 +75,7 @@ app.post('/api/query', async (req, res) => {
                 'Content-Type': 'application/json'
             }
         });
+
 
         // Log the full response data
         console.log('OpenAI API Response:', JSON.stringify(response.data, null, 2));

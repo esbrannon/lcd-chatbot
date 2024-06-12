@@ -70,6 +70,16 @@
     <!-- Custom Script  <script src="js/script.js"></script> -->
     <script>
 
+        var buttons = document.getElementsByClassName('disease-button');
+
+        // Loop through the buttons and add a click event listener to each one
+        Array.from(buttons).forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Set the value of the input box with ID 'questionInput' to 'Hello, World!'
+                document.getElementById('questionInput').value = 'What is your name and age and what are your symptoms?';
+            });
+        });
+
         $(document).ready(function () {
             function addChatMessage(content, isUser = false) {
                 const divClass = isUser ? 'chat-message user-message' : 'chat-message bot-message';
