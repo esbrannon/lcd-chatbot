@@ -54,3 +54,41 @@ body {
 #askButton {
     width: 100%;
 }
+
+#markdown-content {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    min-height: 200px;
+    overflow: auto;
+}
+
+.button-container {
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #008CBA; /* Blue */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    button:hover {
+        background-color: #005f73;
+    }
+
+    button:disabled {
+        background-color: #a9a9a9; /* Dark gray */
+        cursor: not-allowed;
+        color: #666; /* Lighter text color for better contrast and legibility */
+    }

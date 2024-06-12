@@ -13,22 +13,17 @@
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">ChatGPT-assisted Nurse Educator</a>
+        <a class="navbar-brand" href="/">ChatGPT-assisted Nurse Educator</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="caseSummaryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Case Summary
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="caseSummaryDropdown">
-                        <a class="dropdown-item" href="./cases/chickenpox.html" id="chickenpoxSummary">Chickenpox</a>
-                        <a class="dropdown-item" href="./cases/giardia.html" id="giardiaSummary">Giardia</a>
-                        <a class="dropdown-item" href="./cases/measles.html" id="measlesSummary">Measles</a>
-                    </div>
-                </li>
+
+                <a class="nav-link" href="/cases" id="caseSummaryDropdown" aria-expanded="false">
+                    Case Summaries
+                </a>
+
             </ul>
         </div>
     </nav>
@@ -36,49 +31,22 @@
 
     <!-- Main Content Area -->
     <div class="container mt-5">
-
+        <div class="button-container">
+            <button id="chickenpoxButton" class="disease-button">Chickenpox</button>
+            <button id="giardiaButton" class="disease-button">Giardia</button>
+            <button id="measlesButton" class="disease-button">Measles</button>
+            <!-- Additional buttons disabled -->
+            <button disabled>Pertussis</button>
+            <button disabled>Typhoid/Paratyphoid</button>
+            <button disabled>Neisseria Meningitis</button>
+            <button disabled>Hep A</button>
+            <button disabled>Histoplasmosis</button>
+            <button disabled>Lyme</button>
+            <button disabled>EEE</button>
+        </div>
         <div class="search-bar mb-3">
-            <p>You are a public health nurse investigating a case. Please select a disease from the buttons below and then ask the chatbot questions to learn about the case. When you are finished asking questions, type END to receive an evaluation based on the RIME Framework. A Case Summary describing the case can be found above once you are finished with your investigation.</p>
-            <p>You can currently investigate chickenpox, measles, or giardia. Please select one of these below</p>
-
-            <p>
-                <div id="disease-selection" class="container mt-3">
-                    <div class="row">
-                        <div class="col">
-                            <button id="chickenpoxButton" class="btn btn-info disease-button">Chickenpox</button>
-                        </div>
-                        <div class="col">
-                            <button id="giardiaButton" class="btn btn-info disease-button">Giardia</button>
-                        </div>
-                        <div class="col">
-                            <button id="measlesButton" class="btn btn-info disease-button">Measles</button>
-                        </div>
-                        <!-- The rest of the buttons are disabled -->
-                        <div class="col">
-                            <button class="btn btn-info disabled-disease" disabled>Pertussis</button>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-info disabled-disease" disabled>Typhoid/Paratyphoid</button>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-info disabled-disease" disabled>Neisseria Meningitis</button>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-info disabled-disease" disabled>Hep A</button>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-info disabled-disease" disabled>Histoplasmosis</button>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-info disabled-disease" disabled>Lyme</button>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-info disabled-disease" disabled>EEE</button>
-                        </div>
-                    </div>
-                </div>
-
-            </p>
+            <p>You are a public health nurse investigating a case. Please select a disease (currently chickenpox, giardia, or measles) from the buttons below and then ask the chatbot questions to learn about the case. When you are finished asking questions, type END to receive an evaluation based on the RIME Framework. A Case Summary describing the case can be found above once you are finished with your investigation.</p>
+      
 
             <input type="text" id="questionInput" class="form-control" placeholder="Ask a question...">
             <button id="askButton" class="btn btn-primary mt-3">Ask</button>
