@@ -1,8 +1,5 @@
 # Case Summary: Giardiasis
 
-- [Download as PDF](giardia.pdf)
-- [Download as DOCX](giardia.docx)
-
 ## Background
 
 ### Etiology

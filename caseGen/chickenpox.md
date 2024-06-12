@@ -1,8 +1,5 @@
 # Case Summary: Chicken Pox (Varicella)
 
-- [Download as PDF](chickenpox.pdf)
-- [Download as DOCX](chickenpox.docx)
-
 ## Background
 
 ### Etiology

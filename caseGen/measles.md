@@ -1,8 +1,5 @@
 # Case Summary: Measles (Rubeola)
 
-- [Download as PDF](measles.pdf)
-- [Download as DOCX](measles.docx)
-
 ## Background
 
 ### Etiology
