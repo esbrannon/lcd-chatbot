@@ -47,6 +47,27 @@ app.post('/api/query', async (req, res) => {
             case 'measles':
                 htmlPath = './public/cases/measles.md';
                 break;
+            case 'pertusis':
+                htmlPath = './public/cases/pertusis.md';
+                break;
+            case 'paratyphoid':
+                htmlPath = './public/cases/paratyphoid.md';
+                break;
+            case 'neisseria-menigitis':
+                htmlPath = './public/cases/neisseria-menigitis.md';
+                break;
+            case 'hepatitis-a':
+                htmlPath = './public/cases/hepatitis-a.md';
+                break;
+            case 'histoplasmosis':
+                htmlPath = './public/cases/histoplasmosis.md';
+                break;
+            case 'lyme':
+                htmlPath = './public/cases/eee.md';
+                break;
+            case 'eee':
+                htmlPath = './public/cases/eee.md';
+                break;
             default:
                 htmlPath = './public/cases/default.md'; // Default path or an error message
                 break;
