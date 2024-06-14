@@ -1,7 +1,7 @@
-# Case Summary: Pertusis
+# Case Summary: Pertussis
 
-- [Download as PDF](pertusis.pdf)
-- [Download as DOCX](pertusis.docx)
+- [Download as PDF](pertussis.pdf)
+- [Download as DOCX](pertussis.docx)
 
 **Background**
 
