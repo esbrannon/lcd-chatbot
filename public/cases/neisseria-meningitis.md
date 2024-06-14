@@ -1,7 +1,7 @@
-# Case Summary: Nesseria Meningitis
+# Case Summary: Neisseria Meningitis
 
-- [Download as PDF](nesseria-meningitis.pdf)
-- [Download as DOCX](nesseria-meningitis.docx)
+- [Download as PDF](neisseria-meningitis.pdf)
+- [Download as DOCX](neisseria-meningitis.docx)
 
 ### **Background:**
 
