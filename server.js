@@ -47,14 +47,14 @@ app.post('/api/query', async (req, res) => {
             case 'measles':
                 htmlPath = './public/cases/measles.md';
                 break;
-            case 'pertusis':
-                htmlPath = './public/cases/pertusis.md';
+            case 'pertussis':
+                htmlPath = './public/cases/pertussis.md';
                 break;
             case 'paratyphoid':
                 htmlPath = './public/cases/paratyphoid.md';
                 break;
-            case 'neisseria-menigitis':
-                htmlPath = './public/cases/neisseria-menigitis.md';
+            case 'neisseria-meningitis':
+                htmlPath = './public/cases/neisseria-meningitis.md';
                 break;
             case 'hepatitis-a':
                 htmlPath = './public/cases/hepatitis-a.md';
