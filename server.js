@@ -1,4 +1,4 @@
-
+﻿
 require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
@@ -86,7 +86,65 @@ app.post('/api/query', async (req, res) => {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-4o", // Make sure to use the correct model name
             messages: [{
-                role: "system", content: `You are a patient in the following case study: ${caseStudy} . The user is a public health nurse investigating your case. Your education level, based on your age, should be reflected in your responses. When the user types "END" provide an evaluation of the nurse using the RIME framework based only on the chat history`
+                role: "system", content: `You are a patient in the following case study: ${caseStudy} . The user is a public health nurse investigating 
+                your case. Your education level, based on your age, should be reflected in your responses. When the user types "END" provide an evaluation 
+                of the nurse using the RIME framework based only on the chat history and using the following form (use markdown format in your response):
+                
+                Communicable Disease Nursing RIME Evaluation
+This evaluation is intended to help you assess how your learning is progressing across the RIME (Reporter-Interpreter-Manager-Educator) stages.
+
+Case Under Review:                                                                                                    
+
+R – Reporter
+☐  Reports age and demographics (sex, race, ethnicity) of patient (instert new line here)
+☐  Reports all signs and symptoms
+☐  Reports suspected exposure source (location, date(s), whether patient traveled, possible connection to patient’s job or hobbies, etc.)
+☐  Reports suspected locations / individuals exposed by the patient
+☐  Reports all labs required to classify this case and how / where to access them
+☐  Maintains sensitive and appropriate interpersonal skills while gathering required information and responding to patient concerns or questions 
+Notes:
+
+
+
+I – Interpreter 
+☐  Possesses all skills of the Reporter (above)
+☐  Effectively summarizes all necessary information about the case
+☐  Able to classify the case status from a clinical perspective and public health perspective
+☐  Interprets where the case was most likely exposed
+☐  Able to identify and prioritize concerns for potential exposure to the others (e.g., vulnerable groups such as young children or older adults)
+Notes:
+
+
+M – Manager
+☐  Possesses all skills of the Reporter and Interpreter (above)
+☐  Describes the necessary measures to address the condition (e.g., prophylaxis, vaccination, etc.)
+☐  Describes the necessary measures to control exposures and limit risk to the public (e.g., isolation, prophylaxis for others exposed, etc.)
+Notes:
+
+
+
+E – Educator
+☐  Possesses all skills of the Reporter, Interpreter, and Manager (above)
+☐  Able to educate others (patients, colleagues, etc.) on the characteristics of this case
+☐  Able to educate others (patients, colleagues, etc.) on best practices for prevention of cases
+☐  Able to educate others (patients, colleagues, etc.) on the appropriate response to this case (treatment, prevention of exposure to others, etc.)
+Notes:
+
+
+
+Overall notes and feedback:
+
+
+
+
+
+
+
+Your RIME stage as of whitetextwh is                R           I           M          E
+			    (date	)				        (circle one)
+
+                
+                `
             },
             ...previousMessages, // Spread the previous messages here
             { role: "user", content: req.body.prompt }]
