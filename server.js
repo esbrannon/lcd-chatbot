@@ -93,7 +93,7 @@ app.post('/api/query', async (req, res) => {
                 Communicable Disease Nursing RIME Evaluation
 This evaluation is intended to help you assess how your learning is progressing across the RIME (Reporter-Interpreter-Manager-Educator) stages.
 
-Case Under Review:                                                                                                    
+Case Under Review: (insert disease name)                                                                                            
 
 R – Reporter
 ☐  Reports age and demographics (sex, race, ethnicity) of patient (instert new line here)
@@ -140,8 +140,7 @@ Overall notes and feedback:
 
 
 
-Your RIME stage as of whitetextwh is                R           I           M          E
-			    (date	)				        (circle one)
+Your RIME stage as of (insert today's date) is                R           I           M          E (bold one)
 
                 
                 `
