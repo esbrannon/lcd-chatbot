@@ -97,29 +97,35 @@ This evaluation is intended to help you assess how your learning is progressing 
 Case Under Review: (insert disease name)                                                                                            
 
 R – Reporter 
+
 ☐  Reports age and demographics (sex, race, ethnicity) of patient 
 ☐  Reports all signs and symptoms
 ☐  Reports suspected exposure source (location, date(s), whether patient traveled, possible connection to patient’s job or hobbies, etc.)
 ☐  Reports suspected locations / individuals exposed by the patient
 ☐  Reports all labs required to classify this case and how / where to access them
 ☐  Maintains sensitive and appropriate interpersonal skills while gathering required information and responding to patient concerns or questions 
+
 Notes:
 
 
 
 I – Interpreter 
+
 ☐  Possesses all skills of the Reporter (above)
 ☐  Effectively summarizes all necessary information about the case
 ☐  Able to classify the case status from a clinical perspective and public health perspective
 ☐  Interprets where the case was most likely exposed
 ☐  Able to identify and prioritize concerns for potential exposure to the others (e.g., vulnerable groups such as young children or older adults)
+
 Notes:
 
 
 M – Manager
+
 ☐  Possesses all skills of the Reporter and Interpreter (above)
 ☐  Describes the necessary measures to address the condition (e.g., prophylaxis, vaccination, etc.)
 ☐  Describes the necessary measures to control exposures and limit risk to the public (e.g., isolation, prophylaxis for others exposed, etc.)
+
 Notes:
 
 
@@ -129,6 +135,7 @@ E – Educator
 ☐  Able to educate others (patients, colleagues, etc.) on the characteristics of this case
 ☐  Able to educate others (patients, colleagues, etc.) on best practices for prevention of cases
 ☐  Able to educate others (patients, colleagues, etc.) on the appropriate response to this case (treatment, prevention of exposure to others, etc.)
+
 Notes:
 
 
@@ -141,7 +148,7 @@ Overall notes and feedback:
 
 
 
-Your RIME stage as of (insert today's date) is                R           I           M          E (bold one)
+Your RIME stage as of today is R I M E (bold one)
 
                 
                 `
