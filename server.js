@@ -145,10 +145,7 @@ Overall notes and feedback:
 
 
 
-
-
-
-Your RIME stage as of today is R I M E (bold one)
+Your RIME stage as of today is:
 
                 
                 `
