@@ -1,20 +1,21 @@
-# Case Summary: Paratyphoid
-
+# Paratyphoid Case Summary
 - [Download as PDF](paratyphoid.pdf)
 - [Download as DOCX](paratyphoid.docx)
 
+
+
 ## Background
 
-### Etiology
+**Etiology**
 Paratyphoid fever is a bacterial infection caused by the Salmonella enterica serovar Paratyphi A, B, or C. Although similar to typhoid fever, which is caused by Salmonella enterica serovar Typhi, paratyphoid is generally less severe though still significant in public health.
 
-### Epidemiology
+**Epidemiology**
 Paratyphoid fever is more prevalent in regions with poor sanitation and limited access to clean water. Notable regions include South Asia, Southeast Asia, Africa, and parts of South America. Paratyphoid fever accounts for around 5 million infections globally each year, but the incidence can vary widely based on public health infrastructure.
 
-### Transmission
+**Transmission**
 The primary mode of transmission is the ingestion of contaminated food or water. The bacteria can spread through poor hygiene practices, particularly where sanitation systems are inadequate. Person-to-person transmission through the fecal-oral route is also possible.
 
-## Patient Profile
+## Case Details
 
 ### Demographics
 A 30-year-old female, Maria, residing in an urban area of South Asia, presented to a community clinic. Maria lives in a densely populated neighborhood with limited access to clean drinking water and suboptimal sanitation facilities.
@@ -24,11 +25,14 @@ Maria reported experiencing high fever (up to 104°F/40°C), fatigue, abdominal 
 
 ### Testing
 Diagnostic tests included:
+
 - Blood culture: Positive for Salmonella Paratyphi A.
+
 - Widal test: Specific to Salmonella antigens, showed elevated titers for Paratyphi A.
+
 - Complete blood count (CBC): Revealed leukopenia (low white blood cell count).
 
-## Subsequent Cases
+### Subsequent Cases
 During the same period, three additional cases of paratyphoid fever were reported in Maria's neighborhood, suggesting a potential outbreak linked to contaminated water or food sources.
 
 ## Learning Objectives
@@ -38,7 +42,7 @@ During the same period, three additional cases of paratyphoid fever were reporte
 4. Discuss strategies for outbreak investigation and management in communities.
 5. Develop preventive measures to mitigate the spread of paratyphoid fever.
 
-## Actions and Outcomes
+### Actions and Outcomes
 1. **Initial Management:** Maria was treated with a course of antibiotics, specifically azithromycin, given the local antibiotic resistance patterns.
    
 2. **Public Health Response:** Immediate action involved notifying local health authorities to investigate the source of contamination. Health education sessions on basic hygiene, safe food, and water practices were conducted for the community.

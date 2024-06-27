@@ -30,14 +30,10 @@ async function addDownloadLinks(markdownFilePath, pdfPath, docxPath) {
     try {
         const markdownContent = await fs.readFile(markdownFilePath, 'utf8');
         const downloadLinksMarkdown = `- [Download as PDF](${pdfPath})\n- [Download as DOCX](${docxPath})\n\n`;
-
-        // Check if there is a section that starts with "## Background"
-        const hasBackground = markdownContent.match(/^## Background/im);
-
-        // Create a new markdown file content with the download links
-        let newMarkdownContent = hasBackground
-            ? markdownContent.replace(/^## Background/im, `${downloadLinksMarkdown}## Background`)
-            : `${downloadLinksMarkdown}${markdownContent}`;
+        // Create a new markdown file content with the download links in the second line.
+        const markdownLines = markdownContent.split(/\r?\n/); // Split content into lines
+        markdownLines.splice(1, 0, downloadLinksMarkdown); // Insert download links after the first line
+        let newMarkdownContent = markdownLines.join('\n'); // Recombine the content into a single string
 
         // Return the updated content
         return newMarkdownContent;
