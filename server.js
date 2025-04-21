@@ -38,35 +38,23 @@ app.post('/api/query', async (req, res) => {
         // For example, you may have a switch case or if-else structure to select the correct path:
         let htmlPath;
         switch (selectedDisease) {
-            case 'chickenpox':
-                htmlPath = './public/cases/chickenpox.md';
+            case 'Case 1':
+                htmlPath = './public/cases/case1.md';
                 break;
-            case 'giardia':
-                htmlPath = './public/cases/giardia.md';
+            case 'Case 2':
+                htmlPath = './public/cases/case2.md';
                 break;
-            case 'measles':
-                htmlPath = './public/cases/measles.md';
+            case 'Case 3':
+                htmlPath = './public/cases/case3.md';
                 break;
-            case 'pertussis':
-                htmlPath = './public/cases/pertussis.md';
+            case 'Case 4':
+                htmlPath = './public/cases/case4.md';
                 break;
-            case 'paratyphoid':
-                htmlPath = './public/cases/paratyphoid.md';
+            case 'Case 5':
+                htmlPath = './public/cases/case5.md';
                 break;
-            case 'neisseria-meningitis':
-                htmlPath = './public/cases/neisseria-meningitis.md';
-                break;
-            case 'hepatitis-a':
-                htmlPath = './public/cases/hepatitis-a.md';
-                break;
-            case 'histoplasmosis':
-                htmlPath = './public/cases/histoplasmosis.md';
-                break;
-            case 'lyme':
-                htmlPath = './public/cases/eee.md';
-                break;
-            case 'eee':
-                htmlPath = './public/cases/eee.md';
+            case 'Case 6':
+                htmlPath = './public/cases/case6.md';
                 break;
             default:
                 htmlPath = './public/cases/default.md'; // Default path or an error message
@@ -86,68 +74,8 @@ app.post('/api/query', async (req, res) => {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-4o", // Make sure to use the correct model name
             messages: [{
-                role: "system", content: `You are a patient in the following case study: ${caseStudy} . The user is a public health nurse investigating 
-                your case. Your education level, based on your age, should be reflected in your responses. When the user types "END" provide an evaluation 
-                of the nurse using the RIME framework based only on the chat history and using the following form (use markdown format in your response and anything
-                in parantheses are instructions to you):
-                
-                Communicable Disease Nursing RIME Evaluation
-This evaluation is intended to help you assess how your learning is progressing across the RIME (Reporter-Interpreter-Manager-Educator) stages.
-
-Case Under Review: (insert disease name)                                                                                            
-
-R – Reporter 
-
-☐  Reports age and demographics (sex, race, ethnicity) of patient 
-☐  Reports all signs and symptoms
-☐  Reports suspected exposure source (location, date(s), whether patient traveled, possible connection to patient’s job or hobbies, etc.)
-☐  Reports suspected locations / individuals exposed by the patient
-☐  Reports all labs required to classify this case and how / where to access them
-☐  Maintains sensitive and appropriate interpersonal skills while gathering required information and responding to patient concerns or questions 
-
-Notes:
-
-
-
-I – Interpreter 
-
-☐  Possesses all skills of the Reporter (above)
-☐  Effectively summarizes all necessary information about the case
-☐  Able to classify the case status from a clinical perspective and public health perspective
-☐  Interprets where the case was most likely exposed
-☐  Able to identify and prioritize concerns for potential exposure to the others (e.g., vulnerable groups such as young children or older adults)
-
-Notes:
-
-
-M – Manager
-
-☐  Possesses all skills of the Reporter and Interpreter (above)
-☐  Describes the necessary measures to address the condition (e.g., prophylaxis, vaccination, etc.)
-☐  Describes the necessary measures to control exposures and limit risk to the public (e.g., isolation, prophylaxis for others exposed, etc.)
-
-Notes:
-
-
-
-E – Educator
-☐  Possesses all skills of the Reporter, Interpreter, and Manager (above)
-☐  Able to educate others (patients, colleagues, etc.) on the characteristics of this case
-☐  Able to educate others (patients, colleagues, etc.) on best practices for prevention of cases
-☐  Able to educate others (patients, colleagues, etc.) on the appropriate response to this case (treatment, prevention of exposure to others, etc.)
-
-Notes:
-
-
-
-Overall notes and feedback:
-
-
-
-
-Your RIME stage as of today is:
-
-                
+                role: "system", content: `You are a patient in the following case study: ${caseStudy} . The user is a nurse who will educate you about a low carbohydrate diet.                 
+        
                 `
             },
             ...previousMessages, // Spread the previous messages here

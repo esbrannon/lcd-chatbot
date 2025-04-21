@@ -32,19 +32,15 @@
     <!-- Main Content Area -->
     <div class="container mt-5">
         <div class="button-container">
-            <button id="chickenpoxButton" class="disease-button">Chickenpox</button>
-            <button id="giardiaButton" class="disease-button">Giardia</button>
-            <button id="measlesButton" class="disease-button">Measles</button>
-            <button id="pertusisButton" class="disease-button">Pertussis</button>
-            <button id="paratyphoidButton" class="disease-button">Paratyphoid</button>
-            <button id="neisseriaButton" class="disease-button">Neisseria-Meningitis</button>
-            <button id="hepatitisButton" class="disease-button">Hepatitis-A</button>
-            <button id="histoplasmosisButton" class="disease-button">Histoplasmosis</button>
-            <button id="lymeButton" class="disease-button">Lyme</button>
-            <button id="eeeButton" class="disease-button">EEE</button>
+            <button id="case1Button" class="disease-button">Case 1</button>
+            <button id="case2Button" class="disease-button">Case 2</button>
+            <button id="case3Button" class="disease-button">Case 3</button>
+            <button id="case4Button" class="disease-button">Case 4</button>
+            <button id="case5Button" class="disease-button">Case 5</button>
+            <button id="case6Button" class="disease-button">Case 6</button>
         </div>
         <div class="search-bar mb-3">
-            <p>You are a public health nurse investigating a case. Please select a disease from the buttons above and then ask the chatbot questions to learn about the case. When you are finished asking questions, type END to receive an evaluation based on the RIME Framework. A Case Summary describing the case can be found above once you are finished with your investigation.</p>
+            <p>You are a nurse educating a patient about a low carbohydrate diet.</p>
       
 
             <input type="text" id="questionInput" class="form-control" placeholder="Ask a question...">
@@ -75,7 +71,7 @@
         Array.from(buttons).forEach(function (button) {
             button.addEventListener('click', function () {
                 // Set the value of the input box with ID 'questionInput'
-                document.getElementById('questionInput').value = 'What is your name and age and what are your symptoms?';
+                document.getElementById('questionInput').value = 'What is your name and what are your goals?';
             });
         });
 
