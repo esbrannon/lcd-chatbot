@@ -56,9 +56,9 @@ app.post('/api/query', async (req, res) => {
             case 'Case 6':
                 htmlPath = './public/cases/case6.md';
                 break;
-            default:
-                htmlPath = './public/cases/default.md'; // Default path or an error message
-                break;
+            //default:
+              //  htmlPath = './public/cases/default.md'; // Default path or an error message
+               // break;
         }
 
         const caseStudy = await fs.readFile(htmlPath, 'utf8'); // Read the HTML file content
