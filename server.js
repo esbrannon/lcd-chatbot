@@ -38,23 +38,23 @@ app.post('/api/query', async (req, res) => {
         // For example, you may have a switch case or if-else structure to select the correct path:
         let htmlPath;
         switch (selectedDisease) {
-            case 'Case 1':
-                htmlPath = './public/cases/case1.md';
+            case 'case-1':
+                htmlPath = './public/cases/case-1.md';
                 break;
-            case 'Case 2':
-                htmlPath = './public/cases/case2.md';
+            case 'case-2':
+                htmlPath = './public/cases/case-2.md';
                 break;
-            case 'Case 3':
-                htmlPath = './public/cases/case3.md';
+            case 'case-3':
+                htmlPath = './public/cases/case-3.md';
                 break;
-            case 'Case 4':
-                htmlPath = './public/cases/case4.md';
+            case 'case-4':
+                htmlPath = './public/cases/case-4.md';
                 break;
-            case 'Case 5':
-                htmlPath = './public/cases/case5.md';
+            case 'case-5':
+                htmlPath = './public/cases/case-5.md';
                 break;
-            case 'Case 6':
-                htmlPath = './public/cases/case6.md';
+            case 'case-6':
+                htmlPath = './public/cases/case-6.md';
                 break;
             //default:
               //  htmlPath = './public/cases/default.md'; // Default path or an error message
