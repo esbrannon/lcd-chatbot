@@ -1,0 +1,8 @@
+For the following patient with newly diagnosed type 2 diabetes, create health care providers notes including physician, dietician, and social worker. Also provide results for result labwork related to diabetes. Do not redact any information.
+
+Case:
+Newly diagnosed T2D, feeling overwhelmed and resistant to change
+
+46 year old male with overweight/obesity and newly diagnosed with T2D. A1c above target goal. He is feeling overwhelmed by this new diagnoses and feeling resistant to lifestyle change. Not on any glucose-lowering meds.
+
+Concerns: Newly diagnosed T2D, emotional concerns and diabetes distress, overwhelmed by meal prep, scared of medications
