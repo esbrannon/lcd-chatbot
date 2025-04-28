@@ -24,58 +24,14 @@ app.get('/js/marked.min.js', function (req, res) {
 });
 
 // Function to generate a detailed personality profile
-const generateCharacterProfile = (patientNumber) => {
-    const profiles = {
-        'case-1': {
-            personality: "cheerful and optimistic",
-            education: "high school graduate",
-            inquisitiveness: "moderately curious",
-            verbosity: "talkative",
-            knowledge: "limited knowledge about low carb diets"
-        },
-        'case-2': {
-            personality: "quiet and introspective",
-            education: "college graduate",
-            inquisitiveness: "highly curious",
-            verbosity: "concise",
-            knowledge: "basic understanding of low carb diets"
-        },
-        'case-3': {
-            personality: "outgoing and energetic",
-            education: "some college",
-            inquisitiveness: "somewhat curious",
-            verbosity: "verbose",
-            knowledge: "very familiar with low carb diets"
-        },
-        'case-4': {
-            personality: "analytical and detailed",
-            education: "advanced degree",
-            inquisitiveness: "very curious",
-            verbosity: "articulate",
-            knowledge: "deep knowledge of low carb diets"
-        },
-        'case-5': {
-            personality: "pragmatic and down-to-earth",
-            education: "high school graduate",
-            inquisitiveness: "curiously practical",
-            verbosity: "to-the-point",
-            knowledge: "some awareness of low carb diets"
-        },
-        'case-6': {
-            personality: "empathetic and understanding",
-            education: "college graduate",
-            inquisitiveness: "moderately curious",
-            verbosity: "balanced in speech",
-            knowledge: "general knowledge about low carb diets"
-        }
-    };
-    return profiles[patientNumber] || {
-        personality: "no defined personality",
-        education: "unspecified education level",
-        inquisitiveness: "average curiosity",
-        verbosity: "average verbosity",
-        knowledge: "general knowledge level"
-    };
+const loadCharacterProfiles = async () => {
+    try {
+        const data = await fs.readFile(path.join(__dirname, 'public', 'cases', 'personalities.txt'), 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error(`Error reading personalities file:`, error);
+        return {};
+    }
 };
 
 // Route to handle chat completion requests
@@ -112,7 +68,8 @@ app.post('/api/query', async (req, res) => {
         }
 
         const previousMessages = req.session.chatHistory;
-        const characterProfile = generateCharacterProfile(selectedPatient);
+        const characterProfiles = await loadCharacterProfiles();
+        const characterProfile = characterProfiles[selectedPatient] || {};
         const characterDescription = `
             You are a patient who is ${characterProfile.personality}, with an education level of ${characterProfile.education}.
             Your level of inquisitiveness is ${characterProfile.inquisitiveness}, and your verbosity is ${characterProfile.verbosity}.
