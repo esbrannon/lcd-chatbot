@@ -1,41 +1,46 @@
-﻿
-require('dotenv').config();
+﻿require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const fs = require('fs').promises;
+const path = require('path');
 const app = express();
 const session = require('express-session');
 const PORT = process.env.PORT || 3000;
-const { marked } = require('marked');
 
 // Configure session middleware
 app.use(session({
-    secret: 'your-secret', // Replace 'your-secret' with a secret string
+    secret: 'your-secret', // Use a secure string in production
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, maxAge: 3600000 } // For development, 'secure' is false; in production, it should be true if using HTTPS
+    cookie: { secure: false, maxAge: 3600000 }
 }));
 
 app.use(express.static('public'));
+app.use(express.json());
 
 app.get('/js/marked.min.js', function (req, res) {
     res.type('application/javascript');
     res.sendFile(path.join(__dirname, 'public', 'js', 'marked.min.js'));
 });
 
-
-app.use(express.json());
-
+// Function to generate a unique personality
+const generatePersonalityForCase = (caseNumber) => {
+    const personalities = {
+        'case-1': "resistant and angry",
+        'case-2': "quiet and introspective",
+        'case-3': "outgoing and energetic",
+        'case-4': "analytical and detailed",
+        'case-5': "pragmatic and down-to-earth",
+        'case-6': "empathetic and understanding"
+    };
+    return personalities[caseNumber] || "no defined personality";
+};
 
 // Route to handle chat completion requests
 app.post('/api/query', async (req, res) => {
     try {
-        //const htmlPath = './public/cases/chickenpox.html'; // Replace with the path to your HTML file
-        // Get the disease the user selected from the request body
         const selectedDisease = req.body.disease.toLowerCase();
-
-        // Use the selectedDisease variable to determine which case study to use
-        // For example, you may have a switch case or if-else structure to select the correct path:
+        
         let htmlPath;
         switch (selectedDisease) {
             case 'case-1':
@@ -56,29 +61,24 @@ app.post('/api/query', async (req, res) => {
             case 'case-6':
                 htmlPath = './public/cases/case-6.md';
                 break;
-            //default:
-              //  htmlPath = './public/cases/default.md'; // Default path or an error message
-               // break;
         }
 
-        const caseStudy = await fs.readFile(htmlPath, 'utf8'); // Read the HTML file content
+        const caseStudy = await fs.readFile(htmlPath, 'utf8');
 
-        // Initialize the session's chat history if it doesn't exist
         if (!req.session.chatHistory) {
             req.session.chatHistory = [];
         }
 
         const previousMessages = req.session.chatHistory;
+        const casePersonality = generatePersonalityForCase(selectedDisease);
 
-        // Make an API call to the OpenAI chat completion endpoint
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: "gpt-4o", // Make sure to use the correct model name
+            model: "gpt-4o",
             messages: [{
-                role: "system", content: `You are a patient in the following case study: ${caseStudy} . The user is a nurse who will educate you about a low carbohydrate diet.                 
-        
-                `
+                role: "system",
+                content: `You are a ${casePersonality} patient in the following case study: ${caseStudy}. The user is a nurse who will educate you about a low carbohydrate diet.`
             },
-            ...previousMessages, // Spread the previous messages here
+            ...previousMessages,
             { role: "user", content: req.body.prompt }]
         }, {
             headers: {
@@ -87,8 +87,6 @@ app.post('/api/query', async (req, res) => {
             }
         });
 
-
-        // Log the full response data
         console.log('OpenAI API Response:', JSON.stringify(response.data, null, 2));
 
         req.session.chatHistory.push({
@@ -96,10 +94,8 @@ app.post('/api/query', async (req, res) => {
             content: req.body.prompt
         });
 
-        // Extract the message content and send back to the client
         const messageContent = response.data.choices[0].message.content;
 
-        // Add the AI's response to session history
         req.session.chatHistory.push({
             role: "assistant",
             content: messageContent
@@ -108,9 +104,7 @@ app.post('/api/query', async (req, res) => {
         res.json({ message: messageContent });
 
     } catch (error) {
-        // Log the error details
         console.error('Error with OpenAI API:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
-        // Send a 500 Internal Server Error response to the client
         res.status(500).json({ error: 'Failed to fetch response from OpenAI', details: error.message });
     }
 });
@@ -119,16 +113,13 @@ app.post('/api/query', async (req, res) => {
 app.post('/api/select-disease', (req, res) => {
     const selectedDisease = req.body.disease.toLowerCase();
 
-    // Reset the chat history and initiate with selected disease message
     req.session.chatHistory = [{
         role: 'system',
         content: `Disease selected: ${selectedDisease}`
     }];
 
-    // You may also want to store the selectedDisease in the session
     req.session.selectedDisease = selectedDisease;
 
-    // Respond with a success message and the initial chat message
     res.json({
         status: 'success',
         message: `Chat history cleared. Disease selected: ${selectedDisease}`,
