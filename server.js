@@ -166,10 +166,10 @@ app.post('/api/select-patient', async (req, res) => {
         const summaryPath = path.join(__dirname, 'public', 'cases', summaryFile);
         const caseSummary = await fs.readFile(summaryPath, 'utf8');
 
-        req.session.chatHistory = [{
-            role: 'system',
-            content: `Patient selected: ${selectedPatient}`
-        }];
+        //req.session.chatHistory = [{
+        //    role: 'system',
+        //    content: `Patient selected: ${selectedPatient}`
+        //}];
         
         req.session.selectedPatient = selectedPatient;
 
