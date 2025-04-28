@@ -3,127 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT-assisted Nurse Educator</title>
+    <title>LCD Patient Simulator</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
-    
 </head>
 <body>
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">ChatGPT-assisted Nurse Educator</a>
+        <a class="navbar-brand" href="/">LCD Patient Simulator</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-
                 <a class="nav-link" href="/cases" id="caseSummaryDropdown" aria-expanded="false">
                     Case Summaries
                 </a>
-
             </ul>
         </div>
     </nav>
 
-
-    <!-- Main Content Area -->
     <div class="container mt-5">
         <div class="button-container">
-            <button id="case-1Button" class="disease-button">Case-1</button>
-            <button id="case-2Button" class="disease-button">Case-2</button>
-            <button id="case-3Button" class="disease-button">Case-3</button>
-            <button id="case-4Button" class="disease-button">Case-4</button>
-            <button id="case-5Button" class="disease-button">Case-5</button>
-            <button id="case-6Button" class="disease-button">Case-6</button>
+            <button id="case-1Button" class="disease-button" data-case="case-1">Patient 1</button>
+            <button id="case-2Button" class="disease-button" data-case="case-2">Patient 2</button>
+            <button id="case-3Button" class="disease-button" data-case="case-3">Patient 3</button>
+            <button id="case-4Button" class="disease-button" data-case="case-4">Patient 4</button>
+            <button id="case-5Button" class="disease-button" data-case="case-5">Patient 5</button>
+            <button id="case-6Button" class="disease-button" data-case="case-6">Patient 6</button>
         </div>
-        <div class="search-bar mb-3">
-            <p>You are a nurse educating a patient about a low carbohydrate diet.</p>
-      
 
-            <input type="text" id="questionInput" class="form-control" placeholder="Ask a question...">
+        <div class="search-bar mb-3">
+            <p>You are a clinician educating a patient about a low carbohydrate diet. Click on a patient to display a summary and then approach the interaction like a clinical encounter.</p>
+            <textarea id="questionInput" class="form-control" rows="3" placeholder="Ask a question..."></textarea>
             <button id="askButton" class="btn btn-primary mt-3">Ask</button>
+         
         </div>
 
         <div id="answerDiv" class="border p-3 bg-light"></div>
         <button id="copyButton" class="btn btn-secondary mt-3">Copy Response</button>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-dark text-light text-center p-3 mt-5">
-        <p><a href="./" class="text-light">ChatGPT-assisted Nurse Educator</a>.</p>
+        <p><a href="./" class="text-light">LCD Patient Simulator</a>.</p>
     </footer>
 
-    <!-- Bootstrap and jQuery Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="/js/marked.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-    <!-- Custom Script  <script src="js/script.js"></script> -->
     <script>
         $(document).ready(function () {
             function addChatMessage(content, isUser = false) {
                 const divClass = isUser ? 'chat-message user-message' : 'chat-message bot-message';
-                const messageHtml = marked.parse(content);
-                const messageDiv = $('<div>').addClass(divClass).html(messageHtml);
-                $('#answerDiv').prepend(messageDiv);
+                $('#answerDiv').prepend($('<div>').addClass(divClass).text(content));
             }
     
-            // Initialize selectedPatient with an empty string
             let selectedPatient = '';
     
-            // Attach click event handlers to the case buttons
             $('.disease-button').click(function () {
-                selectedPatient = $(this).text();
+                selectedPatient = $(this).data('case');
     
-                // Show the selected patient in the chat display
+                // Clear the chat display immediately
                 $('#answerDiv').empty();
-                // addChatMessage(`Patient selected: ${selectedPatient}`, true);
     
-                // Set placeholder to "Begin case"
-                // $('#questionInput').val('Begin Case');
-    
-                // Call the server to reset the chat history and set the new patient
+                // Make an AJAX call to reset the session and get the new case summary
                 $.ajax({
                     url: '/api/select-patient',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ patient: selectedPatient }),  // Use 'patient' to match server implementation
+                    data: JSON.stringify({ patient: selectedPatient }),
                     success: function (response) {
-                    if (response.caseSummary) {
-                        addChatMessage(response.caseSummary);
-                    } else {
-                        console.log('Summary not found for this case.');
-                    }
-
-                    if (response.chatHistory) {
-                        response.chatHistory.forEach(message => {
-                            addChatMessage(message.content, message.role === 'user');
-                        });
-                    }
-                },
-                error: function (error) {
-                    console.error('Error:', error);
-                }
-            });
-        });
+                        if (response.caseSummary) {
+                            addChatMessage(response.caseSummary);
+                        } else {
+                            console.log('Summary not found for this case.');
+                        }
     
-            // Function to send the question and selected patient to the server
+                        if (response.chatHistory) {
+                            response.chatHistory.forEach(message => {
+                                addChatMessage(message.content, message.role === 'user');
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+    
             function sendQuestion() {
                 const question = $('#questionInput').val();
                 if (question.trim() === '') return;
     
-                addChatMessage(question, true); // Add user's message to the chat
+                addChatMessage(question, true);
     
-                // AJAX request to the server
                 $.ajax({
                     url: '/api/query',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ prompt: question, patient: selectedPatient }),  // Send patient identifier
+                    data: JSON.stringify({ prompt: question, patient: selectedPatient }),
                     success: function (response) {
                         addChatMessage(response.message);
                     },
@@ -132,16 +114,17 @@
                     }
                 });
     
-                $('#questionInput').val(''); // Clear input after sending
+                $('#questionInput').val('');
             }
     
-            // Event listeners for buttons and inputs
             $('#askButton').click(sendQuestion);
             $('#questionInput').keypress(function (event) {
-                if (event.keyCode === 13) { // Enter key
+                if (event.keyCode === 13) {
+                    event.preventDefault();
                     sendQuestion();
                 }
             });
+    
             $('#copyButton').click(function () {
                 const answerDivText = $('#answerDiv').text();
                 if (answerDivText) {
@@ -152,9 +135,25 @@
                     });
                 }
             });
+    
+            $('#clearChatButton').click(function () {
+                $('#answerDiv').empty();
+    
+                // Clear session chat history on the server
+                $.ajax({
+                    url: '/api/clear-chat',
+                    type: 'POST',
+                    success: function (response) {
+                        console.log(response.message);
+                    },
+                    error: function (error) {
+                        console.error('Error clearing chat history:', error);
+                    }
+                });
+            });
         });
     </script>
     
-    
+
 </body>
 </html>

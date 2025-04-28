@@ -34,6 +34,15 @@ const loadCharacterProfiles = async () => {
     }
 };
 
+// Route to clear chat
+app.post('/api/clear-chat', (req, res) => {
+    if (req.session) {
+        req.session.chatHistory = [];
+        console.log('Chat history cleared');
+    }
+    res.json({ status: 'success', message: 'Chat history cleared' });
+});
+
 // Route to handle chat completion requests
 app.post('/api/query', async (req, res) => {
     try {
@@ -118,17 +127,19 @@ app.post('/api/select-patient', async (req, res) => {
     const selectedPatient = req.body.patient.toLowerCase();
 
     try {
-        // Read the summary for the selected case
+        // Generate the file path for the summary
         const summaryFile = `summary-case-${selectedPatient.split('-')[1]}.txt`; // Assuming case-1, case-2, etc.
         const summaryPath = path.join(__dirname, 'public', 'cases', summaryFile);
+        
+        // Read the summary from the file
         const caseSummary = await fs.readFile(summaryPath, 'utf8');
 
-        //req.session.chatHistory = [{
-        //    role: 'system',
-        //    content: `Patient selected: ${selectedPatient}`
-        //}];
+        // Reset chat history in the session
+        req.session.chatHistory = [];
         
         req.session.selectedPatient = selectedPatient;
+        
+        console.log(`Chat history cleared and new patient selected: ${selectedPatient}`);
 
         res.json({
             status: 'success',
