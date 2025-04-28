@@ -64,17 +64,6 @@
 
     <!-- Custom Script  <script src="js/script.js"></script> -->
     <script>
-
-        var buttons = document.getElementsByClassName('disease-button');
-
-        // Loop through the buttons and add a click event listener to each one
-        Array.from(buttons).forEach(function (button) {
-            button.addEventListener('click', function () {
-                // Set the value of the input box with ID 'questionInput'
-                document.getElementById('questionInput').value = 'What is your name and what are your goals?';
-            });
-        });
-
         $(document).ready(function () {
             function addChatMessage(content, isUser = false) {
                 const divClass = isUser ? 'chat-message user-message' : 'chat-message bot-message';
@@ -82,24 +71,23 @@
                 const messageDiv = $('<div>').addClass(divClass).html(messageHtml);
                 $('#answerDiv').prepend(messageDiv);
             }
-
-            // Initialize selectedDisease with an empty string
-            let selectedDisease = '';
-
-            // Attach click event handlers to the disease buttons
+    
+            // Initialize selectedPatient with an empty string
+            let selectedPatient = '';
+    
+            // Attach click event handlers to the case buttons
             $('.disease-button').click(function () {
-                selectedDisease = $(this).text();
-
-                // Clear the chat display visually and then display the selected disease message
+                selectedPatient = $(this).text();
+    
+                // Clear the chat display visually and then display the selected patient message
                 $('#answerDiv').empty();
-                //addChatMessage("Disease selected: " + selectedDisease, true);
-
-                // Call the server to reset the chat history and set the new disease
+    
+                // Call the server to reset the chat history and set the new patient
                 $.ajax({
-                    url: '/api/select-disease',
+                    url: '/api/select-patient',  // Updated to select-patient
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ disease: selectedDisease }),
+                    data: JSON.stringify({ patient: selectedPatient }),  // Use 'patient' instead of 'disease'
                     success: function (response) {
                         // Add the initial system message to the chat history display from the server
                         if (response.chatHistory) {
@@ -113,20 +101,20 @@
                     }
                 });
             });
-
-            // Function to send the question and selected disease to the server
+    
+            // Function to send the question and selected patient to the server
             function sendQuestion() {
                 const question = $('#questionInput').val();
                 if (question.trim() === '') return;
-
+    
                 addChatMessage(question, true); // Add user's message to the chat
-
+    
                 // AJAX request to the server
                 $.ajax({
                     url: '/api/query',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ prompt: question, disease: selectedDisease }),
+                    data: JSON.stringify({ prompt: question, patient: selectedPatient }),  // Use 'patient' instead of 'disease'
                     success: function (response) {
                         addChatMessage(response.message);
                     },
@@ -134,10 +122,10 @@
                         console.error('Error:', error);
                     }
                 });
-
+    
                 $('#questionInput').val(''); // Clear input after sending
             }
-
+    
             // Event listeners for buttons and inputs
             $('#askButton').click(sendQuestion);
             $('#questionInput').keypress(function (event) {
@@ -156,8 +144,7 @@
                 }
             });
         });
-
-
     </script>
+    
 </body>
 </html>
