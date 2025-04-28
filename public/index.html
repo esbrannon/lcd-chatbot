@@ -79,17 +79,21 @@
             $('.disease-button').click(function () {
                 selectedPatient = $(this).text();
     
-                // Clear the chat display visually and then display the selected patient message
+                // Show the selected patient in the chat display
                 $('#answerDiv').empty();
+                addChatMessage(`Patient selected: ${selectedPatient}`, true);
+    
+                // Set placeholder to "Begin case"
+                $('#questionInput').attr('placeholder', 'Begin case').val('');
     
                 // Call the server to reset the chat history and set the new patient
                 $.ajax({
-                    url: '/api/select-patient',  // Updated to select-patient
+                    url: '/api/select-patient',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ patient: selectedPatient }),  // Use 'patient' instead of 'disease'
+                    data: JSON.stringify({ patient: selectedPatient }),  // Use 'patient' to match server implementation
                     success: function (response) {
-                        // Add the initial system message to the chat history display from the server
+                        // Add the system message to the chat history display from the server
                         if (response.chatHistory) {
                             response.chatHistory.forEach(message => {
                                 addChatMessage(message.content, message.role === 'user');
@@ -114,7 +118,7 @@
                     url: '/api/query',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ prompt: question, patient: selectedPatient }),  // Use 'patient' instead of 'disease'
+                    data: JSON.stringify({ prompt: question, patient: selectedPatient }),  // Send patient identifier
                     success: function (response) {
                         addChatMessage(response.message);
                     },
@@ -145,6 +149,7 @@
             });
         });
     </script>
+    
     
 </body>
 </html>
