@@ -162,7 +162,7 @@ app.post('/api/select-patient', async (req, res) => {
 
     try {
         // Read the summary for the selected case
-        const summaryFile = `case-summary-${selectedPatient.split('-')[1]}.txt`; // Assuming case-1, case-2, etc.
+        const summaryFile = `summary-case-${selectedPatient.split('-')[1]}.txt`; // Assuming case-1, case-2, etc.
         const summaryPath = path.join(__dirname, 'public', 'cases', summaryFile);
         const caseSummary = await fs.readFile(summaryPath, 'utf8');
 
