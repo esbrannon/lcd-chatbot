@@ -23,107 +23,48 @@ app.get('/js/marked.min.js', function (req, res) {
     res.sendFile(path.join(__dirname, 'public', 'js', 'marked.min.js'));
 });
 
-// Function to generate a detailed personality profile
-const generateCharacterProfile = (patientNumber) => {
-    const profiles = {
-        'case-1': {
-            personality: "cheerful and optimistic",
-            education: "high school graduate",
-            inquisitiveness: "moderately curious",
-            verbosity: "talkative",
-            knowledge: "limited knowledge about low carb diets"
-        },
-        'case-2': {
-            personality: "quiet and introspective",
-            education: "college graduate",
-            inquisitiveness: "highly curious",
-            verbosity: "concise",
-            knowledge: "basic understanding of low carb diets"
-        },
-        'case-3': {
-            personality: "outgoing and energetic",
-            education: "some college",
-            inquisitiveness: "somewhat curious",
-            verbosity: "verbose",
-            knowledge: "very familiar with low carb diets"
-        },
-        'case-4': {
-            personality: "analytical and detailed",
-            education: "advanced degree",
-            inquisitiveness: "very curious",
-            verbosity: "articulate",
-            knowledge: "deep knowledge of low carb diets"
-        },
-        'case-5': {
-            personality: "pragmatic and down-to-earth",
-            education: "high school graduate",
-            inquisitiveness: "curiously practical",
-            verbosity: "to-the-point",
-            knowledge: "some awareness of low carb diets"
-        },
-        'case-6': {
-            personality: "empathetic and understanding",
-            education: "college graduate",
-            inquisitiveness: "moderately curious",
-            verbosity: "balanced in speech",
-            knowledge: "general knowledge about low carb diets"
-        }
-    };
-    return profiles[patientNumber] || {
-        personality: "no defined personality",
-        education: "unspecified education level",
-        inquisitiveness: "average curiosity",
-        verbosity: "average verbosity",
-        knowledge: "general knowledge level"
-    };
+// Function to load character profiles from the personalities file
+const loadCharacterProfiles = async () => {
+    try {
+        const data = await fs.readFile(path.join(__dirname, 'public', 'cases', 'personalities.txt'), 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error(`Error reading personalities file:`, error);
+        return {};
+    }
+};
+
+// Function to generate patient summary
+const generatePatientSummary = (characterProfile) => {
+    return `This is a patient characterized as ${characterProfile.personality || 'with an unspecified personality'}. They are a ${characterProfile.education || 'learner'} and have ${characterProfile.knowledge || 'some understanding of low carb diets'}.`;
 };
 
 // Route to handle chat completion requests
 app.post('/api/query', async (req, res) => {
     try {
         const selectedPatient = req.body.patient.toLowerCase();
+        const characterProfiles = await loadCharacterProfiles();
+        const characterProfile = characterProfiles[selectedPatient] || {};
 
-        let htmlPath;
-        switch (selectedPatient) {
-            case 'case-1':
-                htmlPath = './public/cases/case-1.md';
-                break;
-            case 'case-2':
-                htmlPath = './public/cases/case-2.md';
-                break;
-            case 'case-3':
-                htmlPath = './public/cases/case-3.md';
-                break;
-            case 'case-4':
-                htmlPath = './public/cases/case-4.md';
-                break;
-            case 'case-5':
-                htmlPath = './public/cases/case-5.md';
-                break;
-            case 'case-6':
-                htmlPath = './public/cases/case-6.md';
-                break;
+        const previousMessages = req.session.chatHistory || [];
+
+        // Check if first interaction for this patient
+        let summaryProvided = false;
+        if (!req.session.summaryProvided) {
+            const summary = generatePatientSummary(characterProfile);
+            req.session.chatHistory.push({
+                role: 'assistant',
+                content: `Summary: ${summary}`
+            });
+            summaryProvided = true;
+            req.session.summaryProvided = true;
         }
-
-        const caseStudy = await fs.readFile(htmlPath, 'utf8');
-
-        if (!req.session.chatHistory) {
-            req.session.chatHistory = [];
-        }
-
-        const previousMessages = req.session.chatHistory;
-        const characterProfile = generateCharacterProfile(selectedPatient);
-        const characterDescription = `
-            You are a patient who is ${characterProfile.personality}, with an education level of ${characterProfile.education}.
-            Your level of inquisitiveness is ${characterProfile.inquisitiveness}, and your verbosity is ${characterProfile.verbosity}.
-            You have ${characterProfile.knowledge}.
-        `;
 
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-4o",
             messages: [{
                 role: "system",
-                content: `${characterDescription} You are involved in the following case study: ${caseStudy}. The user is a nurse who will educate you about a low carbohydrate diet.`
+                content: `You are a ${characterProfile.personality}. You are engaged in the case: ${summaryProvided ? 'with additional information' : 'summary needed'}.`
             },
             ...previousMessages,
             { role: "user", content: req.body.prompt }]
@@ -141,7 +82,7 @@ app.post('/api/query', async (req, res) => {
             content: req.body.prompt
         });
 
-        const messageContent = response.data.choices[0].message.content;
+        const messageContent = summaryProvided ? `Summary: ${generatePatientSummary(characterProfile)}` : response.data.choices[0].message.content;
 
         req.session.chatHistory.push({
             role: "assistant",
@@ -162,10 +103,10 @@ app.post('/api/select-patient', (req, res) => {
 
     req.session.chatHistory = [{
         role: 'system',
-        content: `Patient selected: ${selectedPatient}`
+        content: `Begin case`
     }];
-
     req.session.selectedPatient = selectedPatient;
+    req.session.summaryProvided = false;  // Reset summary flag for new patient
 
     res.json({
         status: 'success',
