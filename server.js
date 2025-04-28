@@ -157,7 +157,7 @@ app.post('/api/query', async (req, res) => {
 });
 
 // Route to handle patient selection and reset chat history
-app.post('/api/select-patient', (req, res) => {
+app.post('/api/select-patient', async (req, res) => {
     const selectedPatient = req.body.patient.toLowerCase();
 
     try {
@@ -165,19 +165,25 @@ app.post('/api/select-patient', (req, res) => {
         const summaryFile = `case-summary-${selectedPatient.split('-')[1]}.txt`; // Assuming case-1, case-2, etc.
         const summaryPath = path.join(__dirname, 'public', 'cases', summaryFile);
         const caseSummary = await fs.readFile(summaryPath, 'utf8');
+
+        req.session.chatHistory = [{
+            role: 'system',
+            content: `Patient selected: ${selectedPatient}`
+        }];
         
-    req.session.chatHistory = [{
-        role: 'system',
-        content: `Patient selected: ${selectedPatient}`
-    }];
+        req.session.selectedPatient = selectedPatient;
 
-    req.session.selectedPatient = selectedPatient;
+        res.json({
+            status: 'success',
+            message: `Chat history cleared. Patient selected: ${selectedPatient}`,
+            chatHistory: req.session.chatHistory,
+            caseSummary: `Summary: ${caseSummary}`
+        });
 
-    res.json({
-        status: 'success',
-        message: `Chat history cleared. Patient selected: ${selectedPatient}`,
-        chatHistory: req.session.chatHistory
-    });
+    } catch (error) {
+        console.error('Error reading case summary:', error);
+        res.status(500).json({ error: 'Failed to read case summary', details: error.message });
+    }
 });
 
 // Start the server
