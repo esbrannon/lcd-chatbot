@@ -63,94 +63,92 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <!-- Custom Script  <script src="js/script.js"></script> -->
-    <!-- Ensure you have this section properly in place as an extension to your HTML structure -->
-
-<script>
-    $(document).ready(function () {
-        function addChatMessage(content, isUser = false) {
-            const divClass = isUser ? 'chat-message user-message' : 'chat-message bot-message';
-            const messageHtml = marked.parse(content);
-            const messageDiv = $('<div>').addClass(divClass).html(messageHtml);
-            $('#answerDiv').prepend(messageDiv);
-        }
-
-        let selectedPatient = '';
-
-        $('.disease-button').click(function () {
-            selectedPatient = $(this).text();
-
-            $('#answerDiv').empty();
-            
-            // AJAX call to get the summary when a case is selected
-            $.ajax({
-                url: '/api/select-patient',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ patient: selectedPatient }),  
-                success: function (response) {
-                    // Display the summary from the server
-                    if (response.caseSummary) {
-                        addChatMessage(response.caseSummary);
-                    } else {
-                        console.log('Summary not found for this case.');
-                    }
-
-                    // Display any additional chat history messages
-                    if (response.chatHistory) {
-                        response.chatHistory.forEach(message => {
-                            addChatMessage(message.content, message.role === 'user');
-                        });
-                    }
-                },
-                error: function (error) {
-                    console.error('Error:', error);
-                }
-            });
-        });
-
-        function sendQuestion() {
-            const question = $('#questionInput').val();
-            if (question.trim() === '') return;
-
-            addChatMessage(question, true);
-
-            // AJAX request to the server
-            $.ajax({
-                url: '/api/query',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ prompt: question, patient: selectedPatient }),
-                success: function (response) {
-                    addChatMessage(response.message);
-                },
-                error: function (error) {
-                    console.error('Error:', error);
-                }
-            });
-
-            $('#questionInput').val('');
-        }
-
-        $('#askButton').click(sendQuestion);
-        $('#questionInput').keypress(function (event) {
-            if (event.keyCode === 13) { 
-                sendQuestion();
+    <script>
+        $(document).ready(function () {
+            function addChatMessage(content, isUser = false) {
+                const divClass = isUser ? 'chat-message user-message' : 'chat-message bot-message';
+                const messageHtml = marked.parse(content);
+                const messageDiv = $('<div>').addClass(divClass).html(messageHtml);
+                $('#answerDiv').prepend(messageDiv);
             }
-        });
-
-        $('#copyButton').click(function () {
-            const answerDivText = $('#answerDiv').text();
-            if (answerDivText) {
-                navigator.clipboard.writeText(answerDivText).then(function () {
-                    alert('Response copied to clipboard');
-                }, function (error) {
-                    alert('Error copying text: ', error);
+    
+            // Initialize selectedPatient with an empty string
+            let selectedPatient = '';
+    
+            // Attach click event handlers to the case buttons
+            $('.disease-button').click(function () {
+                selectedPatient = $(this).text();
+    
+                // Show the selected patient in the chat display
+                $('#answerDiv').empty();
+                // addChatMessage(`Patient selected: ${selectedPatient}`, true);
+    
+                // Set placeholder to "Begin case"
+                // $('#questionInput').val('Begin Case');
+    
+                // Call the server to reset the chat history and set the new patient
+                $.ajax({
+                    url: '/api/select-patient',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ patient: selectedPatient }),  // Use 'patient' to match server implementation
+                    success: function (response) {
+                        // Add the system message to the chat history display from the server
+                        if (response.chatHistory) {
+                            response.chatHistory.forEach(message => {
+                                addChatMessage(message.content, message.role === 'user');
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
                 });
+            });
+    
+            // Function to send the question and selected patient to the server
+            function sendQuestion() {
+                const question = $('#questionInput').val();
+                if (question.trim() === '') return;
+    
+                addChatMessage(question, true); // Add user's message to the chat
+    
+                // AJAX request to the server
+                $.ajax({
+                    url: '/api/query',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ prompt: question, patient: selectedPatient }),  // Send patient identifier
+                    success: function (response) {
+                        addChatMessage(response.message);
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+    
+                $('#questionInput').val(''); // Clear input after sending
             }
+    
+            // Event listeners for buttons and inputs
+            $('#askButton').click(sendQuestion);
+            $('#questionInput').keypress(function (event) {
+                if (event.keyCode === 13) { // Enter key
+                    sendQuestion();
+                }
+            });
+            $('#copyButton').click(function () {
+                const answerDivText = $('#answerDiv').text();
+                if (answerDivText) {
+                    navigator.clipboard.writeText(answerDivText).then(function () {
+                        alert('Response copied to clipboard');
+                    }, function (error) {
+                        alert('Error copying text: ', error);
+                    });
+                }
+            });
         });
-    });
-</script>
-
+    </script>
     
     
 </body>
