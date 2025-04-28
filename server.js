@@ -34,56 +34,36 @@ const loadCharacterProfiles = async () => {
     }
 };
 
+// Function to generate patient summary
+const generatePatientSummary = (characterProfile) => {
+    return `This patient is described as ${characterProfile.personality || 'with an unspecified personality'}. They have ${characterProfile.education || 'an unspecified education level'} and their knowledge about low carb diets is ${characterProfile.knowledge || 'not specified'}. During interactions, they are typically ${characterProfile.verbosity || 'of average verbosity'}.`;
+};
+
 // Route to handle chat completion requests
 app.post('/api/query', async (req, res) => {
     try {
         const selectedPatient = req.body.patient.toLowerCase();
-
-        let htmlPath;
-        switch (selectedPatient) {
-            case 'case-1':
-                htmlPath = './public/cases/case-1.md';
-                break;
-            case 'case-2':
-                htmlPath = './public/cases/case-2.md';
-                break;
-            case 'case-3':
-                htmlPath = './public/cases/case-3.md';
-                break;
-            case 'case-4':
-                htmlPath = './public/cases/case-4.md';
-                break;
-            case 'case-5':
-                htmlPath = './public/cases/case-5.md';
-                break;
-            case 'case-6':
-                htmlPath = './public/cases/case-6.md';
-                break;
-        }
-
-        const caseStudy = await fs.readFile(htmlPath, 'utf8');
-
-        if (!req.session.chatHistory) {
-            req.session.chatHistory = [];
-        }
-
-        const previousMessages = req.session.chatHistory;
         const characterProfiles = await loadCharacterProfiles();
         const characterProfile = characterProfiles[selectedPatient] || {};
 
-        const characterDescription = `
-            You are a patient who is ${characterProfile.personality || 'of unknown personality'}, 
-            with an education level of ${characterProfile.education || 'unknown'}. Your level of inquisitiveness is 
-            ${characterProfile.inquisitiveness || 'average'}, and your verbosity is 
-            ${characterProfile.verbosity || 'average'}. You have 
-            ${characterProfile.knowledge || 'average understanding of low carb diets'}.
-        `;
+        if (req.body.prompt.trim().toLowerCase() === 'begin case') {
+            // Provide a summary instead of interacting with OpenAI
+            const summary = generatePatientSummary(characterProfile);
+            req.session.chatHistory.push({
+                role: 'assistant',
+                content: `Summary: ${summary}`
+            });
+            res.json({ message: summary });
+            return;
+        }
+
+        const previousMessages = req.session.chatHistory || [];
 
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-4o",
             messages: [{
                 role: "system",
-                content: `${characterDescription} You are involved in the following case study: ${caseStudy}. The user is a nurse who will educate you about a low carbohydrate diet.`
+                content: `You are a ${characterProfile.personality}.`
             },
             ...previousMessages,
             { role: "user", content: req.body.prompt }]
@@ -124,8 +104,8 @@ app.post('/api/select-patient', (req, res) => {
         role: 'system',
         content: `Patient selected: ${selectedPatient}`
     }];
-
     req.session.selectedPatient = selectedPatient;
+    req.session.summaryProvided = false;  // Reset summary flag for new patient
 
     res.json({
         status: 'success',
