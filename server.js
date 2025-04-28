@@ -117,21 +117,70 @@ app.post('/api/query', async (req, res) => {
 });
 
 // Route to handle patient selection and reset chat history
-app.post('/api/select-patient', (req, res) => {
-    const selectedPatient = req.body.patient.toLowerCase();
+app.post('/api/select-patient', async (req, res) => {
+    try {
+        const selectedPatient = req.body.patient.toLowerCase();
 
-    req.session.chatHistory = [{
-        role: 'system',
-        content: `Patient selected: ${selectedPatient}`
-    }];
+        let htmlPath;
+        switch (selectedPatient) {
+            case 'case-1':
+                htmlPath = './public/cases/case-1.md';
+                break;
+            case 'case-2':
+                htmlPath = './public/cases/case-2.md';
+                break;
+            case 'case-3':
+                htmlPath = './public/cases/case-3.md';
+                break;
+            case 'case-4':
+                htmlPath = './public/cases/case-4.md';
+                break;
+            case 'case-5':
+                htmlPath = './public/cases/case-5.md';
+                break;
+            case 'case-6':
+                htmlPath = './public/cases/case-6.md';
+                break;
+        }
 
-    req.session.selectedPatient = selectedPatient;
+        const caseStudy = await fs.readFile(htmlPath, 'utf8');
 
-    res.json({
-        status: 'success',
-        message: `Chat history cleared. Patient selected: ${selectedPatient}`,
-        chatHistory: req.session.chatHistory
-    });
+        // Generate a three-sentence summary via ChatGPT for the caseStudy
+        const summaryResponse = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: "gpt-4o",
+            messages: [
+                {
+                    role: "system",
+                    content: `Generate a concise, three-sentence summary of the following case notes:\n\n${caseStudy}`
+                }
+            ]
+        }, {
+            headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const caseSummary = summaryResponse.data.choices[0].message.content.trim();
+
+        // Reset session and include generated summary in response
+        req.session.chatHistory = [{
+            role: 'system',
+            content: `Patient selected: ${selectedPatient}`
+        }];
+        req.session.selectedPatient = selectedPatient;
+
+        res.json({
+            status: 'success',
+            message: `Chat history cleared. Patient selected: ${selectedPatient}`,
+            chatHistory: req.session.chatHistory,
+            caseSummary: `Summary: ${caseSummary}`
+        });
+
+    } catch (error) {
+        console.error('Error with OpenAI API:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
+        res.status(500).json({ error: 'Failed to generate case summary', details: error.message });
+    }
 });
 
 // Start the server
