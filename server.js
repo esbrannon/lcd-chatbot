@@ -23,26 +23,68 @@ app.get('/js/marked.min.js', function (req, res) {
     res.sendFile(path.join(__dirname, 'public', 'js', 'marked.min.js'));
 });
 
-// Function to generate a unique personality
-const generatePersonalityForCase = (caseNumber) => {
-    const personalities = {
-        'case-1': "resistant and angry",
-        'case-2': "quiet and introspective",
-        'case-3': "outgoing and energetic",
-        'case-4': "analytical and detailed",
-        'case-5': "pragmatic and down-to-earth",
-        'case-6': "empathetic and understanding"
+// Function to generate a detailed personality profile
+const generateCharacterProfile = (patientNumber) => {
+    const profiles = {
+        'case-1': {
+            personality: "cheerful and optimistic",
+            education: "high school graduate",
+            inquisitiveness: "moderately curious",
+            verbosity: "talkative",
+            knowledge: "limited knowledge about low carb diets"
+        },
+        'case-2': {
+            personality: "quiet and introspective",
+            education: "college graduate",
+            inquisitiveness: "highly curious",
+            verbosity: "concise",
+            knowledge: "basic understanding of low carb diets"
+        },
+        'case-3': {
+            personality: "outgoing and energetic",
+            education: "some college",
+            inquisitiveness: "somewhat curious",
+            verbosity: "verbose",
+            knowledge: "very familiar with low carb diets"
+        },
+        'case-4': {
+            personality: "analytical and detailed",
+            education: "advanced degree",
+            inquisitiveness: "very curious",
+            verbosity: "articulate",
+            knowledge: "deep knowledge of low carb diets"
+        },
+        'case-5': {
+            personality: "pragmatic and down-to-earth",
+            education: "high school graduate",
+            inquisitiveness: "curiously practical",
+            verbosity: "to-the-point",
+            knowledge: "some awareness of low carb diets"
+        },
+        'case-6': {
+            personality: "empathetic and understanding",
+            education: "college graduate",
+            inquisitiveness: "moderately curious",
+            verbosity: "balanced in speech",
+            knowledge: "general knowledge about low carb diets"
+        }
     };
-    return personalities[caseNumber] || "no defined personality";
+    return profiles[patientNumber] || {
+        personality: "no defined personality",
+        education: "unspecified education level",
+        inquisitiveness: "average curiosity",
+        verbosity: "average verbosity",
+        knowledge: "general knowledge level"
+    };
 };
 
 // Route to handle chat completion requests
 app.post('/api/query', async (req, res) => {
     try {
-        const selectedDisease = req.body.disease.toLowerCase();
-        
+        const selectedPatient = req.body.patient.toLowerCase();
+
         let htmlPath;
-        switch (selectedDisease) {
+        switch (selectedPatient) {
             case 'case-1':
                 htmlPath = './public/cases/case-1.md';
                 break;
@@ -70,13 +112,18 @@ app.post('/api/query', async (req, res) => {
         }
 
         const previousMessages = req.session.chatHistory;
-        const casePersonality = generatePersonalityForCase(selectedDisease);
+        const characterProfile = generateCharacterProfile(selectedPatient);
+        const characterDescription = `
+            You are a patient who is ${characterProfile.personality}, with an education level of ${characterProfile.education}.
+            Your level of inquisitiveness is ${characterProfile.inquisitiveness}, and your verbosity is ${characterProfile.verbosity}.
+            You have ${characterProfile.knowledge}.
+        `;
 
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-4o",
             messages: [{
                 role: "system",
-                content: `You are a ${casePersonality} patient in the following case study: ${caseStudy}. The user is a nurse who will educate you about a low carbohydrate diet.`
+                content: `${characterDescription} You are involved in the following case study: ${caseStudy}. The user is a nurse who will educate you about a low carbohydrate diet.`
             },
             ...previousMessages,
             { role: "user", content: req.body.prompt }]
@@ -109,20 +156,20 @@ app.post('/api/query', async (req, res) => {
     }
 });
 
-// Route to handle disease selection and reset chat history
-app.post('/api/select-disease', (req, res) => {
-    const selectedDisease = req.body.disease.toLowerCase();
+// Route to handle patient selection and reset chat history
+app.post('/api/select-patient', (req, res) => {
+    const selectedPatient = req.body.patient.toLowerCase();
 
     req.session.chatHistory = [{
         role: 'system',
-        content: `Disease selected: ${selectedDisease}`
+        content: `Patient selected: ${selectedPatient}`
     }];
 
-    req.session.selectedDisease = selectedDisease;
+    req.session.selectedPatient = selectedPatient;
 
     res.json({
         status: 'success',
-        message: `Chat history cleared. Disease selected: ${selectedDisease}`,
+        message: `Chat history cleared. Patient selected: ${selectedPatient}`,
         chatHistory: req.session.chatHistory
     });
 });

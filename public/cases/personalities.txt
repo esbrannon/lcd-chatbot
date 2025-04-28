@@ -1,0 +1,44 @@
+{
+    "case-1": {
+        "personality": "cheerful and optimistic",
+        "education": "high school graduate",
+        "inquisitiveness": "moderately curious",
+        "verbosity": "talkative",
+        "knowledge": "limited knowledge about low carb diets"
+    },
+    "case-2": {
+        "personality": "quiet and introspective",
+        "education": "college graduate",
+        "inquisitiveness": "highly curious",
+        "verbosity": "concise",
+        "knowledge": "basic understanding of low carb diets"
+    },
+    "case-3": {
+        "personality": "outgoing and energetic",
+        "education": "some college",
+        "inquisitiveness": "somewhat curious",
+        "verbosity": "verbose",
+        "knowledge": "very familiar with low carb diets"
+    },
+    "case-4": {
+        "personality": "analytical and detailed",
+        "education": "advanced degree",
+        "inquisitiveness": "very curious",
+        "verbosity": "articulate",
+        "knowledge": "deep knowledge of low carb diets"
+    },
+    "case-5": {
+        "personality": "pragmatic and down-to-earth",
+        "education": "high school graduate",
+        "inquisitiveness": "curiously practical",
+        "verbosity": "to-the-point",
+        "knowledge": "some awareness of low carb diets"
+    },
+    "case-6": {
+        "personality": "empathetic and understanding",
+        "education": "college graduate",
+        "inquisitiveness": "moderately curious",
+        "verbosity": "balanced in speech",
+        "knowledge": "general knowledge about low carb diets"
+    }
+}
