@@ -93,18 +93,23 @@
                     contentType: 'application/json',
                     data: JSON.stringify({ patient: selectedPatient }),  // Use 'patient' to match server implementation
                     success: function (response) {
-                        // Add the system message to the chat history display from the server
-                        if (response.chatHistory) {
-                            response.chatHistory.forEach(message => {
-                                addChatMessage(message.content, message.role === 'user');
-                            });
-                        }
-                    },
-                    error: function (error) {
-                        console.error('Error:', error);
+                    if (response.caseSummary) {
+                        addChatMessage(response.caseSummary);
+                    } else {
+                        console.log('Summary not found for this case.');
                     }
-                });
+
+                    if (response.chatHistory) {
+                        response.chatHistory.forEach(message => {
+                            addChatMessage(message.content, message.role === 'user');
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
             });
+        });
     
             // Function to send the question and selected patient to the server
             function sendQuestion() {
