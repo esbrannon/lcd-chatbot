@@ -88,7 +88,7 @@ app.post('/api/query', async (req, res) => {
         `;
 
         // Check if we should switch the role
-        if (req.body.prompt.toLowerCase() === "end") {
+        if (req.body.prompt.toLowerCase() === "feedback") {
             req.session.isPatientMode = false;
 
             // Load learning objectives for the specific case
