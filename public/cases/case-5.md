@@ -1,5 +1,5 @@
 
-# Comprehensive Notes for Patient: Casey Kim
+# Casey Kim
 
 ## Physician Note
 Patient Information:

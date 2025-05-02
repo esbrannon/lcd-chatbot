@@ -1,5 +1,5 @@
 
-# Comprehensive Notes for Patient: Alex Smith
+# Alex Smith
 
 ## Physician Note
 Diagnosis: Newly diagnosed T2D, Obesity

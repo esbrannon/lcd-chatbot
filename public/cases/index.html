@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT-assisted Nurse Educator</title>
+    <title>LCD Patient Simulator</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
@@ -12,7 +12,7 @@
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">ChatGPT-assisted Nurse Educator</a>
+        <a class="navbar-brand" href="/">LCD Patient Simulator</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -20,7 +20,7 @@
             <ul class="navbar-nav">
                 
                     <a class="nav-link" href="/cases" id="caseSummaryDropdown" aria-expanded="false">
-                        Case Summaries
+                        Patient Clinical Notes
                     </a>
                 
             </ul>
@@ -30,14 +30,14 @@
        
 
         <div class="button-container">
-            <button onclick="loadMarkdown('case-1')">Case-1</button>
-            <button onclick="loadMarkdown('case-2')">Case-2</button>
-            <button onclick="loadMarkdown('case-3')">Case-3</button>
-            <button onclick="loadMarkdown('case-4')">Case-4</button>
-            <button onclick="loadMarkdown('case-5')">Case-5</button>
-            <button onclick="loadMarkdown('case-6')">Case-6</button>
+            <button onclick="loadMarkdown('case-1')">Patient 1</button>
+            <button onclick="loadMarkdown('case-2')">Patient 2</button>
+            <button onclick="loadMarkdown('case-3')">Patient 3</button>
+            <button onclick="loadMarkdown('case-4')">Patient 4</button>
+            <button onclick="loadMarkdown('case-5')">Patient 5</button>
+            <button onclick="loadMarkdown('case-6')">Patient 6</button>
         </div>
-
+        Click on a patient to show clinical notes for each patient. The clinical notes were generated from ChatGPT. There may be inconsistencies between notes and they may not based based on the most up to date clinical evidence.
         <div id="markdown-content">Select a topic to display.</div>
 
         <script>
@@ -62,7 +62,7 @@
         </script>
     </div>
     <footer class="bg-dark text-light text-center p-3 mt-5">
-        <p><a href="./" class="text-light">ChatGPT-assisted Nurse Educator</a>.</p>
+        <p><a href="./" class="text-light">LCD Patient Simulator</a>.</p>
     </footer>
 
     <!-- Bootstrap and jQuery Scripts -->

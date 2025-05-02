@@ -1,5 +1,5 @@
 
-# Comprehensive Notes for Patient: Taylor Brown
+# Taylor Brown
 
 ## Physician Note
 Patient Name: Taylor Brown

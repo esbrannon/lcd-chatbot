@@ -1,5 +1,5 @@
 
-# Comprehensive Notes for Patient: Jordan Lee
+# Jordan Lee
 
 ## Physician Note
 Patient Information:

@@ -1,5 +1,5 @@
 
-# Comprehensive Notes for Patient: Jamie Johnson
+# Jamie Johnson
 
 ## Physician Note
 **Patient Information:** 

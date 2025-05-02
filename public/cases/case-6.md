@@ -1,5 +1,5 @@
 
-# Comprehensive Notes for Patient: Morgan Chen
+# Morgan Chen
 
 ## Physician Note
 Patient Name: Morgan Chen
