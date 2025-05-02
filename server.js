@@ -6,6 +6,7 @@ const path = require('path');
 const app = express();
 const session = require('express-session');
 const PORT = process.env.PORT || 3000;
+const marked = require('marked');
 
 // Configure session middleware
 app.use(session({
@@ -29,7 +30,7 @@ const loadCharacterProfiles = async () => {
         const data = await fs.readFile(path.join(__dirname, 'public', 'cases', 'personalities.txt'), 'utf8');
         return JSON.parse(data);
     } catch (error) {
-        console.error(`Error reading personalities file:`, error);
+        console.error('Error reading personalities file:', error);
         return {};
     }
 };
@@ -38,6 +39,7 @@ const loadCharacterProfiles = async () => {
 app.post('/api/clear-chat', (req, res) => {
     if (req.session) {
         req.session.chatHistory = [];
+        req.session.isPatientMode = true; // Reset to patient mode
         console.log('Chat history cleared');
     }
     res.json({ status: 'success', message: 'Chat history cleared' });
@@ -85,6 +87,50 @@ app.post('/api/query', async (req, res) => {
             You have ${characterProfile.knowledge}.
         `;
 
+        // Check if we should switch the role
+        if (req.body.prompt.toLowerCase() === "end") {
+            req.session.isPatientMode = false;
+
+            // Load learning objectives for the specific case
+            const loPath = path.join(__dirname, `public/cases/lo-${selectedPatient}.txt`);
+            const learningObjectives = await fs.readFile(loPath, 'utf8');
+
+            // Analyze conversation history
+            const analysisPrompt = `
+                Based on the following learning objectives: ${learningObjectives}
+                Analyze the chat history below and determine whether the objectives were met:
+                ${previousMessages.map(msg => msg.content).join('\n')}
+            `;
+
+            const analysisResponse = await axios.post('https://api.openai.com/v1/chat/completions', {
+                model: "gpt-4o",
+                messages: [{
+                    role: "system",
+                    content: "You are an evaluator."
+                }, {
+                    role: "user",
+                    content: analysisPrompt
+                }]
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            // Convert analyzed markdown content to HTML
+            try {
+                const analysisContentMarkdown = analysisResponse.data.choices[0].message.content;
+                const analysisContentHTML = marked.parse(analysisContentMarkdown);
+
+                return res.json({ message: analysisContentHTML });
+            } catch (error) {
+                console.error('Error converting markdown to HTML:', error);
+                return res.status(500).json({ error: 'Error processing response', details: error.message });
+            }
+        }
+
+        // Regular conversational response
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-4o",
             messages: [{
@@ -136,6 +182,7 @@ app.post('/api/select-patient', async (req, res) => {
 
         // Reset chat history in the session
         req.session.chatHistory = [];
+        req.session.isPatientMode = true; // Ensure the initial role is as patient
         
         req.session.selectedPatient = selectedPatient;
         
